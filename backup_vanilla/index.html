@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BuildRSWIPE | Premium Fitness Network</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --green:#6abf45;
+  --green-dark:#3d7a1e;
+  --green-bright:#7ed348;
+  --white:#ffffff;
+  --dark:#080c07;
+  --dark2:#0e130c;
+  --dark3:#141a12;
+  --border:rgba(255,255,255,0.05);
+  --text:var(--white);
+  --bg:var(--dark);
+  --bg2:var(--dark2);
+  --bg3:var(--dark3);
+  --text-muted:rgba(255,255,255,0.4);
+}
+
+[data-theme="light"] {
+  --dark:#ffffff;
+  --dark2:#f5f7f5;
+  --dark3:#edf0ed;
+  --white:#080c07;
+  --border:rgba(0,0,0,0.06);
+  --text:#1a1a1a;
+  --bg:#ffffff;
+  --bg2:#f5f7f5;
+  --bg3:#edf0ed;
+  --text-muted:rgba(0,0,0,0.5);
+}
+
+html{scroll-behavior:smooth;scroll-padding-top:100px}
+body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--green)}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 6rem;height:100px;display:flex;align-items:center;justify-content:space-between;transition:all .5s cubic-bezier(0.16, 1, 0.3, 1)}
+nav.scrolled{background:var(--bg);backdrop-filter:blur(20px);height:80px;border-bottom:1px solid var(--border)}
+.nav-logo{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;letter-spacing:6px;color:var(--text);text-decoration:none;text-transform:uppercase}
+.nav-logo span{color:var(--green)}
+.nav-links{display:flex;align-items:center;gap:4rem}
+.nav-links a{text-decoration:none;color:var(--text-muted);font-size:11px;font-weight:700;letter-spacing:4px;text-transform:uppercase;transition:all .3s}
+.nav-links a:hover{color:var(--text)}
+.nav-actions{display:flex;gap:2.5rem;align-items:center}
+.nav-actions .login-link{text-decoration:none;color:var(--text);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+
+.theme-toggle{background:none;border:1px solid var(--border);color:var(--text);padding:8px;border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:0.2s}
+.theme-toggle:hover{background:var(--bg2)}
+.theme-toggle svg{width:16px;height:16px}
+
+.btn-solid{padding:14px 34px;background:var(--green);color:var(--dark);border:none;border-radius:2px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:900;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:.3s}
+.btn-solid:hover{background:var(--green-bright);transform:translateY(-2px)}
+.btn-ghost{padding:14px 34px;background:transparent;color:var(--text);border:1px solid rgba(255,255,255,0.15);border-radius:2px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:900;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:.3s}
+.btn-ghost:hover{background:rgba(255,255,255,0.05);border-color:var(--text);transform:translateY(-2px)}
+
+[data-theme="light"] .btn-ghost{border-color:rgba(0,0,0,0.15)}
+[data-theme="light"] .btn-ghost:hover{background:rgba(0,0,0,0.05)}
+
+/* HERO */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px 2rem;overflow:hidden;text-align:center}
+#hero-canvas{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;opacity:0.6}
+.hero-content{position:relative;z-index:2;max-width:900px}
+.hero-badge{display:inline-block;padding:8px 20px;border:1px solid rgba(255,255,255,0.1);color:var(--text-muted);font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;margin-bottom:2.5rem;border-radius:100px}
+.hero-h1{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(60px,10vw,120px);line-height:0.9;letter-spacing:-4px;text-transform:uppercase;margin-bottom:2rem}
+.hero-h1 .accent{color:var(--green);-webkit-text-stroke:1px var(--green);-webkit-text-fill-color:transparent}
+.hero-p{font-size:20px;color:var(--text-muted);line-height:1.5;max-width:600px;margin:0 auto 3rem}
+.hero-btns{display:flex;gap:1.5rem;justify-content:center}
+
+
+
+/* SECTIONS */
+.sec{padding:10rem 6rem;background:var(--bg);text-align:center}
+.sec-lbl{font-size:12px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--green);margin-bottom:1.5rem;display:block}
+.sec-h{font-family:'Barlow Condensed',sans-serif;font-size:clamp(40px,6vw,80px);font-weight:900;text-transform:uppercase;line-height:0.95;letter-spacing:-2px;color:var(--text);margin-left:auto;margin-right:auto}
+.sec-h em{color:var(--green);font-style:normal}
+
+/* PAIN SECTION */
+.pain-sec{background:var(--bg);border-top:1px solid var(--border);padding:10rem 6rem}
+.pain-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:4rem;margin-top:6rem}
+.pain-card{text-align:center}
+.pain-icon-svg{width:40px;height:40px;stroke:var(--green);margin-bottom:2rem;margin-left:auto;margin-right:auto}
+.pain-card h3{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;text-transform:uppercase;margin-bottom:1.25rem;letter-spacing:1px}
+.pain-card p{color:var(--text-muted);line-height:1.6;font-size:16px}
+
+/* FEATURES */
+.feat-sec{background:var(--bg2);border-top:1px solid var(--border);padding:10rem 6rem}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(350px, 1fr));gap:2px;background:var(--border);margin-top:6rem;border:1px solid var(--border)}
+.feat-card{background:var(--bg2);padding:5rem 4rem;transition:all .4s;text-align:center}
+.feat-card:hover{background:var(--bg3)}
+.feat-card-icon{width:48px;height:48px;stroke:var(--green);margin-bottom:2.5rem;margin-left:auto;margin-right:auto}
+.feat-card h3{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:800;text-transform:uppercase;margin-bottom:1.5rem;letter-spacing:1px}
+.feat-card p{color:var(--text-muted);line-height:1.7;font-size:16px}
+
+/* MARQUEE */
+.mrq-sec{padding:10rem 0;background:var(--bg);overflow:hidden;position:relative}
+.mrq-sec::before,.mrq-sec::after{content:'';position:absolute;top:0;bottom:0;width:300px;z-index:2;pointer-events:none}
+.mrq-sec::before{left:0;background:linear-gradient(90deg,var(--bg),transparent)}
+.mrq-sec::after{right:0;background:linear-gradient(-90deg,var(--bg),transparent)}
+.mrq-track{display:flex;gap:3rem;animation:mrqanim 80s linear infinite;width:max-content}
+.pcard{width:380px;background:var(--bg2);border:1px solid var(--border);padding:3rem;display:flex;flex-direction:column;align-items:center;text-align:center}
+.pc-top{width:100%;display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2rem}
+.pc-id{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:900;letter-spacing:3px;color:var(--green)}
+.pc-status{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted)}
+.pc-avatar{width:120px;height:120px;background:var(--bg3);border:2px solid var(--green);border-radius:50%;margin-bottom:2rem;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:40px;font-weight:900;color:var(--green)}
+.pc-name{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:900;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.5rem}
+.pc-meta{font-size:12px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase}
+
+@keyframes mrqanim{from{transform:translateX(0)}to{transform:translateX(calc(-50% - 1.5rem))}}
+
+/* COMMUNITY */
+.comm-sec{background:var(--bg2);border-top:1px solid var(--border);padding:10rem 6rem}
+.post-wall{display:grid;grid-template-columns:repeat(2, 1fr);gap:4rem;margin-top:6rem}
+.post{background:var(--bg3);border:1px solid var(--border);padding:4rem;text-align:left}
+.post-text{font-size:22px;line-height:1.4;margin-bottom:3rem;font-weight:400;color:var(--white)}
+.post-author{display:flex;align-items:center;gap:1.5rem}
+.pa-av{width:50px;height:50px;background:var(--green);border-radius:50%}
+.pa-name{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;text-transform:uppercase;letter-spacing:1px}
+.pa-role{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:2px}
+
+/* CTA */
+.cta-sec{padding:10rem 2rem;background:var(--bg);text-align:center;border-top:1px solid var(--border)}
+.cta-inner{max-width:800px;margin:0 auto}
+.cta-h{font-family:'Barlow Condensed',sans-serif;font-size:clamp(50px,8vw,100px);font-weight:900;text-transform:uppercase;line-height:0.9;letter-spacing:-3px;margin-bottom:3rem}
+.btn-cta{padding:24px 64px;background:var(--green);color:var(--dark);border:none;border-radius:2px;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;letter-spacing:4px;text-transform:uppercase;cursor:pointer;transition:.3s}
+.btn-cta:hover{background:var(--green-bright);transform:translateY(-4px);box-shadow:0 20px 40px rgba(106,191,69,0.2)}
+
+/* FOOTER */
+footer{background:var(--bg);padding:8rem 6rem 4rem;border-top:1px solid var(--border)}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8rem;margin-bottom:6rem}
+.f-logo{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:900;letter-spacing:8px;text-transform:uppercase;margin-bottom:2.5rem}
+.f-logo span{color:var(--green)}
+.f-desc{color:var(--text-muted);font-size:16px;line-height:1.7;max-width:400px}
+.f-col h4{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:4px;text-transform:uppercase;margin-bottom:2.5rem;color:var(--white)}
+.f-col a{display:block;color:var(--text-muted);text-decoration:none;font-size:14px;margin-bottom:1.25rem;transition:.3s}
+.f-col a:hover{color:var(--green)}
+.footer-bot{display:flex;justify-content:space-between;padding-top:4rem;border-top:1px solid var(--border)}
+.footer-bot p{font-size:12px;color:var(--text-muted);letter-spacing:1px}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(30px);transition:1s cubic-bezier(0.16, 1, 0.3, 1)}
+.rv.on{opacity:1;transform:translateY(0)}
+
+@media(max-width:1024px){
+  nav{padding:0 3rem}
+  .sec,footer{padding:8rem 3rem}
+  .pain-grid{grid-template-columns:1fr; gap:4rem}
+  .post-wall{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body id="top">
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="nav-logo" href="#top">BUILDR<span>SWIPE</span></a>
+  <div class="nav-links">
+    <a href="#about">Network</a>
+    <a href="#features">Platform</a>
+    <a href="#community">Feed</a>
+  </div>
+  <div class="nav-actions">
+    <button class="theme-toggle" id="theme-toggle" title="Toggle Theme">
+      <svg id="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg id="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    <a href="#" class="login-link">Sign In</a>
+    <button class="btn-solid">Join Network</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content rv">
+    <div class="hero-badge">Exclusive Fitness Networking</div>
+    <h1 class="hero-h1">
+      <span>Elevate Your</span>
+      <span class="accent">Training</span>
+    </h1>
+    <p class="hero-p">Connect with dedicated training partners who share your discipline. No noise, no distractions. Just elite-level coordination for serious athletes.</p>
+    <div class="hero-btns">
+      <button class="btn-solid">Join Network</button>
+      <button class="btn-ghost" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">Learn More</button>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT / PAIN -->
+<section class="sec pain-sec" id="about">
+  <div class="rv">
+    <span class="sec-lbl">The Network</span>
+    <h2 class="sec-h">Built for <em>Discipline</em></h2>
+  </div>
+  
+  <div class="pain-grid">
+    <div class="pain-card rv">
+      <svg class="pain-icon-svg" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <h3>Vetted Network</h3>
+      <p>Every member is verified to ensure they are serious about their training goals and schedule commitment.</p>
+    </div>
+    <div class="pain-card rv">
+      <svg class="pain-icon-svg" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <h3>Zero Friction</h3>
+      <p>Skip the small talk. Our interface is designed for quick coordination and immediate results.</p>
+    </div>
+    <div class="pain-card rv">
+      <svg class="pain-icon-svg" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <h3>High Intensity</h3>
+      <p>Match with partners who push you to your absolute limit. Accountability is built into the core.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="sec feat-sec" id="features">
+  <div class="rv">
+    <span class="sec-lbl">Platform</span>
+    <h2 class="sec-h">Engineered for <em>Performance</em></h2>
+  </div>
+  
+  <div class="feat-grid">
+    <div class="feat-card rv">
+      <svg class="feat-card-icon" viewBox="0 0 24 24" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <h3>Precision Sync</h3>
+      <p>Advanced scheduling tools that match your workout windows with compatible partners in real-time.</p>
+    </div>
+    <div class="feat-card rv">
+      <svg class="feat-card-icon" viewBox="0 0 24 24" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <h3>Direct coordination</h3>
+      <p>Integrated communication channel built specifically for training logistics and session planning.</p>
+    </div>
+    <div class="feat-card rv">
+      <svg class="feat-card-icon" viewBox="0 0 24 24" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <h3>Tier System</h3>
+      <p>Climb the ranks through consistent training. Elite status unlocks exclusive network features.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<section class="mrq-sec">
+  <div class="mrq-track">
+    <div class="pcard"><div class="pc-top"><span class="pc-id">KARTIKEY</span><span class="pc-status">ELITE MEMBER</span></div><div class="pc-avatar">K</div><div class="pc-name">KARTIKEY</div><div class="pc-meta">STRENGTH · 0.5 KM</div></div>
+    <div class="pcard"><div class="pc-top"><span class="pc-id">MUKTHA</span><span class="pc-status">ELITE MEMBER</span></div><div class="pc-avatar">M</div><div class="pc-name">MUKTHA</div><div class="pc-meta">PILATES · 1.2 KM</div></div>
+    <div class="pcard"><div class="pc-top"><span class="pc-id">ANANYA</span><span class="pc-status">MEMBER</span></div><div class="pc-avatar">A</div><div class="pc-name">ANANYA</div><div class="pc-meta">CALISTHENICS · 0.8 KM</div></div>
+    <div class="pcard"><div class="pc-top"><span class="pc-id">SNEHA</span><span class="pc-status">MEMBER</span></div><div class="pc-avatar">S</div><div class="pc-name">SNEHA</div><div class="pc-meta">ENDURANCE · 2.0 KM</div></div>
+    <!-- Duplicates for loop -->
+    <div class="pcard"><div class="pc-top"><span class="pc-id">KARTIKEY</span><span class="pc-status">ELITE MEMBER</span></div><div class="pc-avatar">K</div><div class="pc-name">KARTIKEY</div><div class="pc-meta">STRENGTH · 0.5 KM</div></div>
+    <div class="pcard"><div class="pc-top"><span class="pc-id">MUKTHA</span><span class="pc-status">ELITE MEMBER</span></div><div class="pc-avatar">M</div><div class="pc-name">MUKTHA</div><div class="pc-meta">PILATES · 1.2 KM</div></div>
+    <div class="pcard"><div class="pc-top"><span class="pc-id">ANANYA</span><span class="pc-status">MEMBER</span></div><div class="pc-avatar">A</div><div class="pc-name">ANANYA</div><div class="pc-meta">CALISTHENICS · 0.8 KM</div></div>
+    <div class="pcard"><div class="pc-top"><span class="pc-id">SNEHA</span><span class="pc-status">MEMBER</span></div><div class="pc-avatar">S</div><div class="pc-name">SNEHA</div><div class="pc-meta">ENDURANCE · 2.0 KM</div></div>
+  </div>
+</section>
+
+<!-- COMMUNITY -->
+<section class="sec comm-sec" id="community">
+  <div class="rv">
+    <span class="sec-lbl">Network Feed</span>
+    <h2 class="sec-h">Recent <em>Activity</em></h2>
+  </div>
+  
+  <div class="post-wall">
+    <div class="post rv">
+      <p class="post-text">"The accountability in this network is unmatched. Hit a massive PR today"</p>
+      <div class="post-author">
+        <div class="pa-av" style="display:flex;align-items:center;justify-content:center;color:var(--dark);font-weight:900;border-radius:50%">K</div>
+        <div>
+          <div class="pa-name">Kartikey K.</div>
+          <div class="pa-role">Member</div>
+        </div>
+      </div>
+    </div>
+    <div class="post rv">
+      <p class="post-text">"Found a consistent partner for 5 AM sessions within 2 days of joining. Pure performance."</p>
+      <div class="post-author">
+        <div class="pa-av" style="display:flex;align-items:center;justify-content:center;color:var(--dark);font-weight:900;border-radius:50%">M</div>
+        <div>
+          <div class="pa-name">Muktha T.</div>
+          <div class="pa-role">Elite Member</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-sec">
+  <div class="cta-inner rv">
+    <h2 class="cta-h">Join the <em>Elite</em></h2>
+    <button class="btn-cta">Start Training</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="f-logo">BUILDR<span>SWIPE</span></div>
+      <p class="f-desc">The premium fitness network for dedicated athletes. Built for performance, designed for discipline.</p>
+    </div>
+    <div class="f-col">
+      <h4>Platform</h4>
+      <a href="#">Network</a>
+      <a href="#">Feed</a>
+      <a href="#">Privacy</a>
+    </div>
+    <div class="f-col">
+      <h4>Connect</h4>
+      <a href="#">Instagram</a>
+      <a href="#">Twitter</a>
+      <a href="#">Discord</a>
+    </div>
+  </div>
+  <div class="footer-bot" style="display: flex; justify-content: center; width: 100%;">
+    <p>© 2026 BUILDRSWIPE. ALL RIGHTS RESERVED.</p>
+  </div>
+</footer>
+
+<script>
+// Theme Toggle
+const themeToggle = document.getElementById('theme-toggle');
+const sunIcon = document.getElementById('sun');
+const moonIcon = document.getElementById('moon');
+const html = document.documentElement;
+
+themeToggle.addEventListener('click', () => {
+  const isLight = html.getAttribute('data-theme') === 'light';
+  if (isLight) {
+    html.removeAttribute('data-theme');
+    sunIcon.style.display = 'none';
+    moonIcon.style.display = 'block';
+  } else {
+    html.setAttribute('data-theme', 'light');
+    sunIcon.style.display = 'block';
+    moonIcon.style.display = 'none';
+  }
+});
+
+// Three.js Hero Background
+const canvas = document.querySelector('#hero-canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 5;
+
+const particlesGeometry = new THREE.BufferGeometry();
+const particlesCount = 2000;
+const posArray = new Float32Array(particlesCount * 3);
+
+for(let i = 0; i < particlesCount * 3; i++) {
+  posArray[i] = (Math.random() - 0.5) * 15;
+}
+
+particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+const material = new THREE.PointsMaterial({
+  size: 0.005,
+  color: '#6abf45',
+  transparent: true,
+  opacity: 0.8
+});
+
+const particlesMesh = new THREE.Points(particlesGeometry, material);
+scene.add(particlesMesh);
+
+function animate() {
+  requestAnimationFrame(animate);
+  particlesMesh.rotation.y += 0.001;
+  particlesMesh.rotation.x += 0.0005;
+  renderer.render(scene, camera);
+}
+
+function handleResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+window.addEventListener('resize', handleResize);
+handleResize();
+animate();
+
+// UI Interactivity
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
+});
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('on');
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.rv').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

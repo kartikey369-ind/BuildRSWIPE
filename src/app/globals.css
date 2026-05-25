@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+@theme {
+  --color-green: #6abf45;
+  --color-green-dark: #3d7a1e;
+  --color-green-bright: #7ed348;
+  
+  --color-dark: #080c07;
+  --color-dark-lighter: #0e130c;
+  --color-dark-lightest: #141a12;
+
+  --font-sans: "Barlow", sans-serif;
+  --font-condensed: "Barlow Condensed", sans-serif;
+
+  --letter-spacing-widest: 0.25em;
+  --letter-spacing-ultra: 0.4em;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-accent: var(--surface-accent);
+  --color-border-subtle: var(--border-subtle);
+  --color-text-muted: var(--text-muted);
+}
+
+:root {
+  --background: #080c07;
+  --foreground: #ffffff;
+  --surface: #0e140b;
+  --surface-accent: #161d12;
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --text-muted: rgba(255, 255, 255, 0.4);
+}
+
+[data-theme='light'] {
+  --background: #ffffff;
+  --foreground: #080c07;
+  --surface: #f0f4f0;
+  --surface-accent: #e4e9e4;
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --text-muted: rgba(0, 0, 0, 0.5);
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #6abf45;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
