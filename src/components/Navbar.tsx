@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "./ui/Button";
 import { motion } from "framer-motion";
 import { Sun, Moon } from "lucide-react";
+import Link from "next/link";
 
 export const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -26,17 +27,18 @@ export const Navbar = () => {
     <nav
       className={cn(
         "fixed top-0 left-0 right-0 z-[100] px-6 md:px-24 flex items-center justify-between transition-all duration-500 ease-out",
-        scrolled ? "h-20 bg-background/90 backdrop-blur-xl border-b border-border-subtle" : "h-[100px] bg-transparent"
+        scrolled ? "h-20 bg-background/90 backdrop-blur-xl border-b border-border-subtle shadow-lg" : "h-[100px] bg-transparent"
       )}
     >
-      <motion.a
-        href="#top"
-        className="font-condensed text-[28px] font-black tracking-[6px] uppercase text-foreground"
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-      >
-        BUILDR<span className="text-green">SWIPE</span>
-      </motion.a>
+      <Link href="/">
+        <motion.div
+          className="font-condensed text-[28px] font-black tracking-[6px] uppercase text-foreground cursor-pointer"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+        >
+          BUILDR<span className="text-green">SWIPE</span>
+        </motion.div>
+      </Link>
 
       <div className="hidden md:flex items-center gap-16">
         {["About", "Why", "Features", "Product"].map((item, i) => (
@@ -60,10 +62,12 @@ export const Navbar = () => {
         >
           {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
         </button>
-        <a href="#" className="hidden sm:block text-[11px] font-bold tracking-[2px] uppercase text-foreground">
+        <Link href="/login" className="hidden sm:block text-[11px] font-bold tracking-[2px] uppercase text-foreground">
           Sign In
-        </a>
-        <Button size="sm">Join Network</Button>
+        </Link>
+        <Link href="/signup">
+          <Button size="sm">Join Network</Button>
+        </Link>
       </div>
     </nav>
   );

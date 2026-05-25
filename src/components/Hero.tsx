@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Button } from "./ui/Button";
 import { HeroScene } from "./HeroScene";
+import Link from "next/link";
 
 export const Hero = () => {
   return (
@@ -29,7 +30,9 @@ export const Hero = () => {
         </p>
         
         <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-          <Button size="lg" className="w-full sm:w-auto">Join Network</Button>
+          <Link href="/signup">
+            <Button size="lg" className="w-full sm:w-auto">Join Network</Button>
+          </Link>
           <Button 
             variant="ghost" 
             size="lg" 

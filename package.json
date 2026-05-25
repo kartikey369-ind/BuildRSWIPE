@@ -12,11 +12,13 @@
     "@react-three/drei": "latest",
     "@react-three/fiber": "latest",
     "clsx": "latest",
+    "firebase": "^12.13.0",
     "framer-motion": "latest",
     "lucide-react": "latest",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",
+    "react-firebase-hooks": "^5.1.1",
     "tailwind-merge": "latest",
     "three": "latest"
   },

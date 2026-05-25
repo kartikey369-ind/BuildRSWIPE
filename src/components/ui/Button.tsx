@@ -1,10 +1,10 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
-import { ButtonHTMLAttributes, forwardRef } from "react";
+import { motion, HTMLMotionProps } from "framer-motion";
+import { forwardRef } from "react";
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends HTMLMotionProps<"button"> {
   variant?: "solid" | "ghost" | "outline";
   size?: "sm" | "md" | "lg";
 }
