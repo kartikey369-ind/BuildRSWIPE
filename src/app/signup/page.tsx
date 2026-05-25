@@ -12,6 +12,8 @@ import { Mail, Lock, User, ArrowRight, ShieldCheck, Globe, Loader2, CheckCircle2
 import Link from "next/link";
 import { AuthNavbar } from "@/components/AuthNavbar";
 
+export const dynamic = 'force-dynamic';
+
 export default function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
