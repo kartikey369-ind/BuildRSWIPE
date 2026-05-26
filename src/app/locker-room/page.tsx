@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { auth, db } from "@/lib/firebase";
 import { 
@@ -31,7 +31,7 @@ import {
 import { onAuthStateChanged } from "firebase/auth";
 import { UserProfile } from "@/lib/utils";
 
-export default function LockerRoom() {
+function LockerRoomContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const matchId = searchParams.get("match");
@@ -266,5 +266,20 @@ export default function LockerRoom() {
         )}
       </main>
     </div>
+  );
+}
+
+export default function LockerRoom() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-background flex flex-col items-center justify-center gap-6">
+        <Loader2 size={48} className="text-green animate-spin" />
+        <p className="font-condensed text-xl font-black uppercase tracking-[4px] text-text-muted">
+          Entering the Locker Room...
+        </p>
+      </main>
+    }>
+      <LockerRoomContent />
+    </Suspense>
   );
 }
