@@ -22,6 +22,8 @@ if (process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
   app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
   auth = getAuth(app);
   db = getFirestore(app);
+} else {
+  console.warn("Firebase API Key missing. Auth will not function.");
 }
 
 // Initialize Analytics safely

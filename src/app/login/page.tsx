@@ -25,6 +25,7 @@ export default function Login() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!auth) return setError("Firebase is not initialized. Check your configuration.");
     if (!email || !password) return setError("Please fill in all fields.");
     
     setError("");
@@ -32,7 +33,7 @@ export default function Login() {
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.push("/"); // Redirect to home for now as dashboard might not exist
+      router.push("/profile-setup"); // Trigger identity reveal/check
     } catch (err: any) {
       console.error(err);
       setError(getFriendlyErrorMessage(err.code));
@@ -42,18 +43,20 @@ export default function Login() {
   };
 
   const handleGoogleSignIn = async () => {
+    if (!auth) return setError("Firebase is not initialized.");
     setError("");
     setMessage("");
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-      router.push("/");
+      router.push("/profile-setup");
     } catch (err: any) {
       setError(getFriendlyErrorMessage(err.code));
     }
   };
 
   const handleForgotPassword = async () => {
+    if (!auth) return setError("Firebase is not initialized.");
     if (!email) {
       setError("Enter your email address first to reset your password.");
       return;
@@ -86,25 +89,25 @@ export default function Login() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-[440px] z-10"
+        className="w-full max-w-[440px] z-10 px-2"
       >
-        <div className="text-center mb-10">
-          <h1 className="font-condensed text-5xl md:text-6xl font-black uppercase tracking-tight text-foreground mb-3">
+        <div className="text-center mb-6 sm:mb-10">
+          <h1 className="font-condensed text-4xl sm:text-6xl font-black uppercase tracking-tight text-foreground mb-2 sm:mb-3">
             Welcome Back
           </h1>
-          <p className="text-text-muted text-[10px] tracking-[0.3em] uppercase font-bold opacity-80">
+          <p className="text-text-muted text-[9px] sm:text-[10px] tracking-[0.2em] sm:tracking-[0.3em] uppercase font-bold opacity-80 px-4">
             Sign in to your performance dashboard
           </p>
         </div>
 
-        <div className="bg-white dark:bg-[#0e140b]/90 border border-black/[0.04] dark:border-border-subtle/50 p-8 md:p-12 rounded-[2.5rem] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.12)] dark:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.6)] backdrop-blur-3xl relative overflow-hidden">
+        <div className="bg-background dark:bg-[#0e140b]/90 border border-black/[0.08] dark:border-border-subtle/50 p-6 sm:p-12 rounded-[2rem] sm:rounded-[2.5rem] shadow-sm dark:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.6)] backdrop-blur-3xl relative overflow-hidden">
           {/* Subtle Inner Glow for Dark Mode */}
-          <div className="absolute inset-0 pointer-events-none border border-white/5 rounded-[2.5rem] dark:block hidden" />
+          <div className="absolute inset-0 pointer-events-none border border-white/5 rounded-[2rem] sm:rounded-[2.5rem] dark:block hidden" />
           
-          <form onSubmit={handleLogin} className="space-y-6 relative z-10">
+          <form onSubmit={handleLogin} className="space-y-4 sm:space-y-6 relative z-10">
             <Input
               label="Email Address"
-              icon={<Mail size={18} />}
+              icon={<Mail size={16} className="sm:w-[18px] sm:h-[18px]" />}
               type="email"
               placeholder="athlete@performance.com"
               required
@@ -113,10 +116,10 @@ export default function Login() {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
             />
 
-            <div className="space-y-3">
+            <div className="space-y-2 sm:space-y-3">
               <Input
                 label="Password"
-                icon={<Lock size={18} />}
+                icon={<Lock size={16} className="sm:w-[18px] sm:h-[18px]" />}
                 type="password"
                 placeholder="••••••••"
                 required
@@ -196,14 +199,14 @@ export default function Login() {
                 <div className="w-full border-t border-black/5 dark:border-border-subtle"></div>
               </div>
               <div className="relative flex justify-center text-[9px] font-black uppercase tracking-[0.3em]">
-                <span className="bg-white dark:bg-[#0e140b] px-4 text-text-muted/60 transition-colors">Or continue with</span>
+                <span className="bg-background dark:bg-[#0e140b] px-4 text-text-muted/60 transition-colors">Or continue with</span>
               </div>
             </div>
 
             <button
               type="button"
               onClick={handleGoogleSignIn}
-              className="w-full bg-black/[0.02] dark:bg-surface/30 border border-black/5 dark:border-border-subtle hover:border-green hover:bg-black/[0.04] dark:hover:bg-surface transition-all rounded-xl py-4 flex items-center justify-center gap-4 text-[11px] font-bold tracking-[0.2em] uppercase group"
+              className="w-full bg-white dark:bg-surface/30 border border-border-subtle dark:border-border-subtle hover:border-green hover:bg-black/[0.04] dark:hover:bg-surface transition-all rounded-xl py-4 flex items-center justify-center gap-4 text-[11px] font-bold tracking-[0.2em] uppercase group"
             >
               <Globe size={18} className="text-green group-hover:rotate-12 transition-transform" />
               Login with Google

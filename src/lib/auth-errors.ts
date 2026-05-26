@@ -1,4 +1,6 @@
 export const getFriendlyErrorMessage = (errorCode: string): string => {
+  if (!errorCode) return "Authentication service is currently unavailable. Please ensure environment variables are configured.";
+  
   switch (errorCode) {
     case "auth/invalid-email":
       return "That email address doesn't look right. Check for typos.";
